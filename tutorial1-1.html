@@ -42,15 +42,29 @@
 	};
 	monsterImage.src = "images/rat.png";
 
-	// Game bojects
+	// Hole image
+	var holeReady = false;
+	var holeImage = new Image();
+	holeImage.onload = function() {
+		holeReady = true;
+	};
+	holeImage.src = "images/hole.png";
+
+	// Game objects
 	var hero = {
 		speed: 256
 	};
 	hero.x = canvas.width / 2;
 	hero.y = canvas.height / 2;
+
 	var monster = {};
 	monster.x = 32 + (Math.random() * (canvas.width - 64));
 	monster.y = 32 + (Math.random() * (canvas.height - 64));
+
+	var hole = {};
+	hole.x = 32 + (Math.random() * (canvas.width - 64));
+	hole.y = 32 + (Math.random() * (canvas.height - 64));
+
 	var monstersCaught = 0;
 
 	// Handle keyboard controls
@@ -113,7 +127,7 @@
 			hero.x += hero.speed * modifier;
 		}
 
-		// Are they touching?
+		// Is cat touching rat?
 		if (heroClashMonster()) {
 			monsterImage.src = "images/rat2.png";
 			++monstersCaught;
@@ -122,14 +136,27 @@
 			reset();
 			
 		}
+		if (catClashHole()) {
+			alert("Oops! cat fell in to the hole");
+		}
 	};
 
+	// Cat touch rat
 	var heroClashMonster = function() {
 		return hero.x <= (monster.x + 32)
 			&& monster.x <= (hero.x + 32)
 			&& hero.y <= (monster.y + 32)
 			&& monster.y <= (hero.y + 32)
 	}
+
+	// Cat touch hole
+	var catClashHole = function() {
+		return hero.x <= (hole.x + 32)
+			&& hole.x <= (hero.x + 32)
+			&& hero.y <= (hole.y + 32)
+			&& hole.y <= (hero.y + 32)
+	}
+
 	// Draw everything
 	var render = function() {
 		if (bgReady) {
@@ -141,6 +168,9 @@
 		}
 		if (monsterReady) {
 			ctx.drawImage(monsterImage, monster.x, monster.y);
+		}
+		if (holeReady) {
+			ctx.drawImage(holeImage, hole.x, hole.y);
 		}
 		
 		// Score
