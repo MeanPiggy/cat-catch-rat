@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Practice</title>
+
+	
+</head>
+
+<body>
+
+<script>
+	// Create the canvas 
+	var canvas = document.createElement("canvas");
+	var ctx = canvas.getContext("2d");
+	var monsterHurt = false;
+	canvas.width = 512;
+	canvas.height = 480;
+	document.body.appendChild(canvas);
+
+	// Background image
+	var bgReady = false;
+	var bgImage = new Image();
+	bgImage.onload = function () {
+		bgReady = true;
+	};
+	bgImage.src = "images/background.jpg";
+
+	// Hero image
+	var heroReady = false;
+	var heroImage = new Image();
+	heroImage.onload = function() {
+		heroReady = true;
+	};
+	heroImage.src = "images/cat.png";
+
+	// Monster image
+	var monsterReady = false;
+	var monsterImage = new Image();
+	monsterImage.onload = function() {
+		monsterReady = true;
+	};
+	monsterImage.src = "images/rat.png";
+
+	// Game bojects
+	var hero = {
+		speed: 256
+	};
+	hero.x = canvas.width / 2;
+	hero.y = canvas.height / 2;
+	var monster = {};
+	monster.x = 32 + (Math.random() * (canvas.width - 64));
+	monster.y = 32 + (Math.random() * (canvas.height - 64));
+	var monstersCaught = 0;
+
+	// Handle keyboard controls
+	var keysDown = {};
+
+	addEventListener("keydown", function (e) {
+		keysDown[e.keyCode] = true;
+	}, false);
+
+	addEventListener("keyup", function (e) {
+		delete keysDown[e.keyCode];
+	}, false);
+
+	var iFrequency = 3000;
+	var myInterval = 0;
+	// Random monster's position
+	var monsterPosition = function () {
+			monsterImage.src = "images/rat.png";
+			monsterHurt = false;
+			do {
+				monster.x = 32 + (Math.random() * (canvas.width - 64));
+				monster.y = 32 + (Math.random() * (canvas.height - 64));
+			}while(heroClashMonster());
+			
+	};
+	
+	// Waiting function
+	var wait = function(ms) {
+	   var start = new Date().getTime();
+	   var end = start;
+	   while(end < start + ms) {
+	     end = new Date().getTime();
+	  }
+	}	
+
+	// Reset the game when the player catches a monster
+	var reset = function () {
+
+		// Loop every 3 seconds change the position by random
+		var startLoop = function() {
+			if(myInterval > 0) clearInterval(myInterval);
+			myInterval = setInterval("monsterPosition()", iFrequency);
+		}
+		startLoop();
+	   
+		
+	};
+		// Update game objects
+	var update = function (modifier) {
+		if (38 in keysDown) {// Player holding up
+			hero.y -= hero.speed * modifier;
+		}
+		if (40 in keysDown) {// Player holding down
+			hero.y += hero.speed * modifier;
+		}
+		if (37 in keysDown) {// Player holding left
+			hero.x -= hero.speed * modifier;
+		}
+		if (39 in keysDown) {// Player holding right
+			hero.x += hero.speed * modifier;
+		}
+
+		// Are they touching?
+		if (heroClashMonster()) {
+			monsterImage.src = "images/rat2.png";
+			++monstersCaught;
+			monsterHurt = true;
+			setTimeout(function() {monsterPosition();}, 300);
+			reset();
+			
+		}
+	};
+
+	var heroClashMonster = function() {
+		return hero.x <= (monster.x + 32)
+			&& monster.x <= (hero.x + 32)
+			&& hero.y <= (monster.y + 32)
+			&& monster.y <= (hero.y + 32)
+	}
+	// Draw everything
+	var render = function() {
+		if (bgReady) {
+			ctx.drawImage(bgImage, 0, 0);
+			ctx.drawImage(bgImage, 500, 0);
+		}
+		if (heroReady) {
+			ctx.drawImage(heroImage, hero.x, hero.y);
+		}
+		if (monsterReady) {
+			ctx.drawImage(monsterImage, monster.x, monster.y);
+		}
+		
+		// Score
+		ctx.fillStyle = "rgb(0, 0, 0)";
+		ctx.font = "24px Helvetica";
+		ctx.textAlign = "left";
+		ctx.textBaseline = "top";
+		ctx.fillText("Rat caught: " + monstersCaught, 32, 32);
+	};
+
+	// The main game loop
+	var main = function () {
+		var now = Date.now();
+		var delta = now - then;
+
+		if (!monsterHurt) {
+			update(delta / 1000);
+		}
+		render();
+
+		then = now;
+
+
+		// Request to do this again ASAP
+		requestAnimationFrame(main);
+	};
+
+	// Cross-browser support for requestAnimationFrame
+	var w = window;
+	requestAnimationFrame = w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.msRequestAnimationFrame || w.mozRequestAnimationFrame;
+
+	// let's Play this game
+	var then = Date.now();
+	reset();
+	main();
+
+</script>
+
+
+</body>
+
+</html>
