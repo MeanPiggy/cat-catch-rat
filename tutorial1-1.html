@@ -3,11 +3,48 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Practice</title>
-
+<style>
+	#game-over{
+		position:absolute;
+		z-index:9999;
+		background:rgba(0,0,0,0.5);
+		width:512px;
+		height:480px;
+		color:#fff;
+		text-align:center;
+		font-family:Helvetica;
+		display:none;
+	}
+	#game-over.active{
+		display:table;
+	}
+	.center-text{
+		display:table-cell;
+		vertical-align:middle;
+		text-align:center;
+	}
+	#reset{
+		padding:10px;
+		background:orange;
+		margin-top:15px;
+		display:inline-block;
+		cursor:pointer;
+	}
+	#reset:hover{
+		background:#999;
+	}
+</style>
 	
 </head>
 
 <body>
+<h1>Cat Catch Rat</h1>
+<div id="game-over">
+	<div class="center-text">
+		<h2>Game Over</h2>
+		<div id="reset">Restart</div>
+	</div>
+</div>	
 
 <script>
 	// Create the canvas 
@@ -137,7 +174,18 @@
 			
 		}
 		if (catClashHole()) {
-			alert("Oops! cat fell in to the hole");
+			console.log("Cat fell");
+			clearInterval(myInterval);
+			var gameOver = document.getElementById("game-over");
+			gameOver.classList.add("active");
+
+			// Game over text
+			/*var resetBtn = document.createElement("button");
+			var resetText = document.createTextNode("RESTART");
+			resetBtn.appendChild(resetText);
+			document.body.appendChild(resetBtn);*/
+
+			window.stop(update());
 		}
 	};
 
@@ -207,6 +255,10 @@
 	reset();
 	main();
 
+	// Restart the game
+	document.getElementById("reset").addEventListener("click", function() {
+		location.reload();
+	});
 </script>
 
 
