@@ -46,13 +46,14 @@
 	</div>
 </div>	
 
+
 <script>
 	// Create the canvas 
 	var canvas = document.createElement("canvas");
 	var ctx = canvas.getContext("2d");
-	var monsterHurt = false;
-	canvas.width = 512;
-	canvas.height = 480;
+	var ratHurt = false;
+		canvas.width = 512;
+		canvas.height = 480;
 	document.body.appendChild(canvas);
 
 	// Background image
@@ -63,21 +64,24 @@
 	};
 	bgImage.src = "images/background.jpg";
 
-	// Hero image
-	var heroReady = false;
-	var heroImage = new Image();
-	heroImage.onload = function() {
-		heroReady = true;
-	};
-	heroImage.src = "images/cat.png";
 
-	// Monster image
-	var monsterReady = false;
-	var monsterImage = new Image();
-	monsterImage.onload = function() {
-		monsterReady = true;
+	// Cat image
+	var catReady = false;
+	var catImage = new Image();
+	catImage.onload = function() {
+		catReady = true;
 	};
-	monsterImage.src = "images/rat.png";
+	catImage.src = "images/cat.png";
+
+
+	// Rat image
+	var ratReady = false;
+	var ratImage = new Image();
+	ratImage.onload = function() {
+		ratReady = true;
+	};
+	ratImage.src = "images/rat.png";
+
 
 	// Hole image
 	var holeReady = false;
@@ -87,22 +91,47 @@
 	};
 	holeImage.src = "images/hole.png";
 
+
+	// Car image
+	var carReady = false;
+	var carImage = new Image();
+	carImage.onload = function() {
+		carReady = true;
+	};
+	carImage.src = "images/car.png"; 
+
+
 	// Game objects
-	var hero = {
+	var cat = {
 		speed: 256
 	};
-	hero.x = canvas.width / 2;
-	hero.y = canvas.height / 2;
+	cat.x = canvas.width / 2;
+	cat.y = canvas.height / 2;
 
-	var monster = {};
-	monster.x = 32 + (Math.random() * (canvas.width - 64));
-	monster.y = 32 + (Math.random() * (canvas.height - 64));
+	var rat = {};
+	rat.x = 32 + (Math.random() * (canvas.width - 64));
+	rat.y = 32 + (Math.random() * (canvas.height - 64));
 
 	var hole = {};
 	hole.x = 32 + (Math.random() * (canvas.width - 64));
 	hole.y = 32 + (Math.random() * (canvas.height - 64));
 
-	var monstersCaught = 0;
+	var car = {}; 
+	var car2 = {};
+	var car3 = {};
+	var car4 = {};
+	var car5 = {};
+	
+	car.y = 1;
+	car2.y = 1;
+	car3.y = 1;
+	car4.y = 1;
+	car5.y = 1;
+
+	var ratsCaught = 0;
+
+	// Car objects
+	
 
 	// Handle keyboard controls
 	var keysDown = {};
@@ -115,18 +144,105 @@
 		delete keysDown[e.keyCode];
 	}, false);
 
+
+	// Random rat's position
 	var iFrequency = 3000;
 	var myInterval = 0;
-	// Random monster's position
-	var monsterPosition = function () {
-			monsterImage.src = "images/rat.png";
-			monsterHurt = false;
+	var holeInterval = 0;
+
+	var ratPosition = function () {
+			ratImage.src = "images/rat.png";
+			ratHurt = false;
 			do {
-				monster.x = 32 + (Math.random() * (canvas.width - 64));
-				monster.y = 32 + (Math.random() * (canvas.height - 64));
-			}while(heroClashMonster());
+				rat.x = 32 + (Math.random() * (canvas.width - 64));
+				rat.y = 32 + (Math.random() * (canvas.height - 64));
+			}while(catClashrat());
 			
 	};
+
+	// Random hole position
+	var holePosition = function() {
+		do {
+				hole.x = 32 + (Math.random() * (canvas.width - 64));
+				hole.y = 32 + (Math.random() * (canvas.height - 64));
+			}while(catClashHole());
+	};
+
+	// Moveing car down
+	var carMove = function() {
+		if((car.y) <= 470){
+			car.y += 1; 
+		}else{
+			car.y = 1;
+			car.x = 32 + (Math.random() * (canvas.height - 64));
+		}
+	}
+	var carMove2 = function() {
+		if((car2.y) <= 470){
+			car2.y += 1; 
+		}else{
+			car2.y = 1;
+			car2.x = 32 + (Math.random() * (canvas.height - 64));
+		}
+	}
+	var carMove3 = function() {
+		if((car3.y) <= 470){
+			car3.y += 1; 
+		}else{
+			car3.y = 1;
+			car3.x = 32 + (Math.random() * (canvas.height - 64));
+		}
+	}
+	var carMove4 = function() {
+		if((car4.y) <= 470){
+			car4.y += 1; 
+		}else{
+			car4.y = 1;
+			car4.x = 32 + (Math.random() * (canvas.height - 64));
+		}
+	}
+	var carMove5 = function() {
+		if((car5.y) <= 470){
+			car5.y += 1; 
+		}else{
+			car5.y = 1;
+			car5.x = 32 + (Math.random() * (canvas.height - 64));
+		}
+	}
+	var carInterval = 0;
+	var carInterval2 = 0;
+	var carInterval3 = 0;
+	var carInterval4 = 0;
+	var carInterval5 = 0;
+	
+	var moveLoopCar = function() {
+			if(carInterval > 0) clearInterval(carInterval);
+			carInterval = setInterval("carMove()", 10);
+		}
+	moveLoopCar();
+
+	var moveLoopCar2 = function() {
+			if(carInterval2 > 0) clearInterval(carInterval2);
+			carInterval2 = setInterval("carMove2()", 20);
+		}
+	moveLoopCar2();
+
+	var moveLoopCar3 = function() {
+			if(carInterval3 > 0) clearInterval(carInterval3);
+			carInterval3 = setInterval("carMove3()", 30);
+		}
+	moveLoopCar3();
+
+	var moveLoopCar4 = function() {
+			if(carInterval4 > 0) clearInterval(carInterval4);
+			carInterval4 = setInterval("carMove4()", 40);
+		}
+	moveLoopCar4();
+	var moveLoopCar5 = function() {
+			if(carInterval5 > 0) clearInterval(carInterval5);
+			carInterval5 = setInterval("carMove5()", 50);
+		}
+	moveLoopCar5();
 	
 	// Waiting function
 	var wait = function(ms) {
@@ -137,96 +253,125 @@
 	  }
 	}	
 
-	// Reset the game when the player catches a monster
+	// Reset the game when the player catches a rat
 	var reset = function () {
 
-		// Loop every 3 seconds change the position by random
+		// Loop every few seconds change the position by random
 		var startLoop = function() {
 			if(myInterval > 0) clearInterval(myInterval);
-			myInterval = setInterval("monsterPosition()", iFrequency);
+			myInterval = setInterval("ratPosition()", iFrequency);
 		}
-		startLoop();
-	   
 		
+
+		var startLoopHole = function() {
+			if(holeInterval > 0) clearInterval(holeInterval);
+			holeInterval = setInterval("holePosition()", 2000);
+		}
+		car.x = 32 + (Math.random() * (canvas.height - 64));
+		car2.x = 32 + (Math.random() * (canvas.height - 64));
+		car3.x = 32 + (Math.random() * (canvas.height - 64));
+		car4.x = 32 + (Math.random() * (canvas.height - 64));
+		car5.x = 32 + (Math.random() * (canvas.height - 64));
+
+		startLoop();
+		startLoopHole();
 	};
+	
 		// Update game objects
 	var update = function (modifier) {
 		if (38 in keysDown) {// Player holding up
-			hero.y -= hero.speed * modifier;
+			cat.y -= cat.speed * modifier;
 		}
 		if (40 in keysDown) {// Player holding down
-			hero.y += hero.speed * modifier;
+			cat.y += cat.speed * modifier;
 		}
 		if (37 in keysDown) {// Player holding left
-			hero.x -= hero.speed * modifier;
+			cat.x -= cat.speed * modifier;
 		}
 		if (39 in keysDown) {// Player holding right
-			hero.x += hero.speed * modifier;
+			cat.x += cat.speed * modifier;
 		}
 
 		// Is cat touching rat?
-		if (heroClashMonster()) {
-			monsterImage.src = "images/rat2.png";
-			++monstersCaught;
-			monsterHurt = true;
-			setTimeout(function() {monsterPosition();}, 300);
+		if (catClashrat()) {
+			ratImage.src = "images/rat2.png";
+			++ratsCaught;
+			ratHurt = true;
+			setTimeout(function() {ratPosition();}, 300);
 			reset();
 			
 		}
-		if (catClashHole()) {
-			console.log("Cat fell");
+		if (catClashHole() || catClashcar()) {
+			console.log("Cat fell in the hole");
 			clearInterval(myInterval);
 			var gameOver = document.getElementById("game-over");
 			gameOver.classList.add("active");
 
-			// Game over text
-			/*var resetBtn = document.createElement("button");
-			var resetText = document.createTextNode("RESTART");
-			resetBtn.appendChild(resetText);
-			document.body.appendChild(resetBtn);*/
-
 			window.stop(update());
 		}
+		
 	};
 
 	// Cat touch rat
-	var heroClashMonster = function() {
-		return hero.x <= (monster.x + 32)
-			&& monster.x <= (hero.x + 32)
-			&& hero.y <= (monster.y + 32)
-			&& monster.y <= (hero.y + 32)
+	var catClashrat = function() {
+		return cat.x <= (rat.x + 32)
+			&& rat.x <= (cat.x + 32)
+			&& cat.y <= (rat.y + 32)
+			&& rat.y <= (cat.y + 32)
 	}
 
 	// Cat touch hole
 	var catClashHole = function() {
-		return hero.x <= (hole.x + 32)
-			&& hole.x <= (hero.x + 32)
-			&& hero.y <= (hole.y + 32)
-			&& hole.y <= (hero.y + 32)
+		return cat.x <= (hole.x + 32)
+			&& hole.x <= (cat.x + 32)
+			&& cat.y <= (hole.y + 32)
+			&& hole.y <= (cat.y + 32)
+	}
+
+	// Cat touch car
+	var catClashcar = function() {
+		if ((cat.x <= (car.x + 32) && car.x <= (cat.x + 32) && cat.y <= (car.y + 32) && car.y <= (cat.y + 32)) || 
+			(cat.x <= (car2.x + 32) && car2.x <= (cat.x + 32) && cat.y <= (car2.y + 32) && car2.y <= (cat.y + 32)) || 
+			(cat.x <= (car3.x + 32) && car3.x <= (cat.x + 32) && cat.y <= (car3.y + 32) && car3.y <= (cat.y + 32)) || 
+			(cat.x <= (car4.x + 32) && car4.x <= (cat.x + 32) && cat.y <= (car4.y + 32) && car4.y <= (cat.y + 32)) || 
+			(cat.x <= (car5.x + 32) && car5.x <= (cat.x + 32) && cat.y <= (car5.y + 32) && car5.y <= (cat.y + 32)) ) {
+			return true;
+		}
+		
 	}
 
 	// Draw everything
+
 	var render = function() {
+	
 		if (bgReady) {
 			ctx.drawImage(bgImage, 0, 0);
 			ctx.drawImage(bgImage, 500, 0);
 		}
-		if (heroReady) {
-			ctx.drawImage(heroImage, hero.x, hero.y);
+		if (catReady) {
+			ctx.drawImage(catImage, cat.x, cat.y);
 		}
-		if (monsterReady) {
-			ctx.drawImage(monsterImage, monster.x, monster.y);
+		if (ratReady) {
+			ctx.drawImage(ratImage, rat.x, rat.y);
 		}
 		if (holeReady) {
 			ctx.drawImage(holeImage, hole.x, hole.y);
 		}
+		if (carReady) {
+			ctx.drawImage(carImage, car.x, car.y);
+			ctx.drawImage(carImage, car2.x, car2.y);
+			ctx.drawImage(carImage, car3.x, car3.y);
+			ctx.drawImage(carImage, car4.x, car4.y);
+			ctx.drawImage(carImage, car5.x, car5.y);
+		}
+	
 		
 		// Score
 		ctx.fillStyle = "rgb(0, 0, 0)";
 		ctx.font = "24px Helvetica";
 		ctx.textAlign = "left";
 		ctx.textBaseline = "top";
-		ctx.fillText("Rat caught: " + monstersCaught, 32, 32);
+		ctx.fillText("Rat caught: " + ratsCaught, 32, 32);
 	};
 
 	// The main game loop
@@ -234,7 +379,7 @@
 		var now = Date.now();
 		var delta = now - then;
 
-		if (!monsterHurt) {
+		if (!ratHurt) {
 			update(delta / 1000);
 		}
 		render();
@@ -253,6 +398,7 @@
 	// let's Play this game
 	var then = Date.now();
 	reset();
+
 	main();
 
 	// Restart the game
