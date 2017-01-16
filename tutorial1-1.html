@@ -133,6 +133,13 @@
 	car4.y = 1;
 	car5.y = 1;
 
+	car.x = 32 + (Math.random() * (canvas.height - 64));
+		car2.x = 32 + (Math.random() * (canvas.height - 64));
+		car3.x = 32 + (Math.random() * (canvas.height - 64));
+		car4.x = 32 + (Math.random() * (canvas.height - 64));
+		car5.x = 32 + (Math.random() * (canvas.height - 64));
+
+
 	var ratsCaught = 0;
 
 
@@ -247,6 +254,8 @@
 		}
 	moveLoopCar5();
 	
+		
+
 	// Waiting function
 	var wait = function(ms) {
 	   var start = new Date().getTime();
@@ -286,11 +295,7 @@
 			if(holeInterval > 0) clearInterval(holeInterval);
 			holeInterval = setInterval("holePosition()", 2000);
 		}
-		car.x = 32 + (Math.random() * (canvas.height - 64));
-		car2.x = 32 + (Math.random() * (canvas.height - 64));
-		car3.x = 32 + (Math.random() * (canvas.height - 64));
-		car4.x = 32 + (Math.random() * (canvas.height - 64));
-		car5.x = 32 + (Math.random() * (canvas.height - 64));
+		
 
 		startLoop();
 		startLoopHole();
